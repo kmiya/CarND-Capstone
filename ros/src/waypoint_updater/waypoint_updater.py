@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
+import math
+
 import numpy as np
-import rospy
-from std_msgs.msg import Int32
-from geometry_msgs.msg import PoseStamped
-from styx_msgs.msg import Lane, Waypoint
 from scipy.spatial import KDTree
 
-import math
+import rospy
+from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import Int32
+from styx_msgs.msg import Lane, Waypoint
 
 '''
 This node will publish waypoints from the car's current position to some `x` distance ahead.
@@ -37,7 +38,6 @@ class WaypointUpdater(object):
 
         # Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
         rospy.Subscriber("/traffic_waypoint", Int32, self.traffic_cb)
-        # rospy.Subscriber("/obstacle_waypoint", Waypoint, self.obstacle_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
@@ -132,10 +132,6 @@ class WaypointUpdater(object):
 
     def traffic_cb(self, msg):
         self.stopline_wp_idx = msg.data
-
-    def obstacle_cb(self, msg):
-        # TODO: Callback for /obstacle_waypoint message. We will implement it later
-        pass
 
     def get_waypoint_velocity(self, waypoint):
         return waypoint.twist.twist.linear.x
